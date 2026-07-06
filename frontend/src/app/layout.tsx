@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "@/components/ui/sonner"
 
 import {cn} from "@/lib/utils"
+import SessionProvider from "@/providers/SessionProvider";
 
 const fontSans = FontSans({
   subsets: ["latin"],
@@ -24,9 +26,16 @@ export default function RootLayout({
       lang="en"
       suppressHydrationWarning
     >
-      <body className={cn ("min-h-full flex flex-col antialiased",
+      <SessionProvider>
+        <body className={cn ("min-h-full flex flex-col antialiased",
       fontSans.variable)}
-      >{children}</body>
+      >
+        <Toaster richColors duration={10000}/>
+        {children}
+      
+      </body>
+      </SessionProvider>
+      
     </html>
   );
 }
