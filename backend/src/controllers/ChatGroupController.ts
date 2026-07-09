@@ -4,11 +4,13 @@ class ChatGroupController{
 
     static async index(req:Request, res:Response){
         try {
-            
             const user=req.user;
+            if (!user) {
+                return res.status(401).json({message:"Unauthorized"});
+            }
             const groups=await prisma.chatGroup.findMany({
                 where:{
-                    user_id:user?.id,
+                    user_id:user.id,
                 },
                 orderBy:{
                     created_at:"desc",
@@ -40,11 +42,14 @@ class ChatGroupController{
         try {
             const body=req.body
             const user=req.user;
+            if (!user) {
+                return res.status(401).json({message:"Unauthorized"});
+            }
             await prisma.chatGroup.create({
                 data:{
                     title:body.title,
                     passcode:body.passcode,
-                    user_id: user?.id,
+                    user_id: user.id,
                 },
             })
             return res.json({message:"Chat group created successfully"});
