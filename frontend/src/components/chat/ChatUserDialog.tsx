@@ -53,10 +53,12 @@ export default function ChatUserDialog({
           JSON.stringify(data?.data)
         );
       } catch (error) {
-        toast.error("Something went wrong.please try again!");
+        toast.error("Something went wrong. Please try again!");
+        return; 
       }
     }
-    if (group.passcode != state.passcode) {
+   
+    if (group.passcode !== state.passcode) {
       toast.error("Please enter correct passcode!");
     } else {
       setOpen(false);

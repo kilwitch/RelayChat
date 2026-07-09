@@ -1,47 +1,52 @@
 import { Socket, Server } from "socket.io";
+import prisma from "./config/db.config.js";
 
 export interface CustomSocket extends Socket {
     room?: string;
 }
 
 export function setupSocket(io: Server) {
+    
+    const nsp = io.of("/");
 
-    // Scope middleware to the default namespace only.
-    // Using io.use() would also intercept @socket.io/admin-ui connections
-    // which don't send a room — causing them to be rejected.
-    io.of("/").use((socket: CustomSocket, next) => {
-        const room = socket.handshake.auth.room|| socket.handshake.headers.room;
-        if (!room) {
-            return next(new Error("invalid room"));
+    nsp.use((socket: CustomSocket, next) => {
+        const rawRoom =
+            socket.handshake.auth?.room ??
+            socket.handshake.headers?.room;
+
+        if (!rawRoom) {
+            return next(new Error("invalid room: no room provided in auth or headers"));
         }
-        socket.room = room;
+
+        // headers.room can be string | string[] — always coerce to string
+        socket.room = Array.isArray(rawRoom) ? rawRoom[0] : rawRoom;
         next();
     });
 
-    io.on("connection", (socket: CustomSocket) => {
-        console.log(`Socket connected: ${socket.id}, room: ${socket.room}`);
+    nsp.on("connection", (socket: CustomSocket) => {
+        // console.log(`Socket connected: ${socket.id}, room: ${socket.room}`);
 
-        // Join the room supplied during handshake auth
         if (socket.room) {
             socket.join(socket.room);
         }
 
-        socket.on("message", (data) => {
-            console.log("server side message", data);
-
+        socket.on("message", async(data) => {
+            
             if (socket.room) {
-                // Enrich payload with server timestamp before broadcasting
-                // so consumers get a complete MessageType-compatible object.
-                const enriched = {
-                    data,
-                    created_at: new Date().toISOString(),
-                };
-                io.to(socket.room).emit("message", enriched);
+                
+                await prisma.chats.create({
+                    data:data
+                });
+                io.to(socket.room).emit("message", data);
             }
         });
 
         socket.on("disconnect", () => {
             console.log("a user disconnected", socket.id);
+            
+            if (socket.room) {
+                socket.to(socket.room).emit("userLeft", { id: socket.id });
+            }
         });
     });
 }
