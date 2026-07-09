@@ -5,5 +5,5 @@ build/
 .env
 .env.local
 
-
+certificates/
 /src/generated/prisma
