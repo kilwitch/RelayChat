@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useMemo, Fragment } from "react";
+import React, { useState, useEffect } from "react";
 import ChatNav from "./ChatNav";
 import ChatUserDialog from "./ChatUserDialog";
 import ChatSidebar from "./ChatSidebar";
@@ -16,6 +16,8 @@ export default function ChatBase({
 }) {
   const [open, setOpen] = useState(true);
   const [chatUser, setChatUser] = useState<GroupChatUserType>();
+  const [onlineUsers, setOnlineUsers] = useState<Set<string>>(new Set());
+
   useEffect(() => {
     const data = localStorage.getItem(group.id);
     if (data) {
@@ -23,18 +25,25 @@ export default function ChatBase({
       setChatUser(pData);
     }
   }, [group.id]);
+
   return (
     <div className="flex">
-      <ChatSidebar users={users} />
+      <ChatSidebar users={users} onlineUsers={onlineUsers} />
       <div className="w-full md:w-4/5 bg-linear-to-b from-gray-50 to-white">
         {open ? (
           <ChatUserDialog open={open} setOpen={setOpen} group={group} />
         ) : (
-          <ChatNav chatGroup={group} users={users} user={chatUser} />
+          <ChatNav chatGroup={group} users={users} user={chatUser} onlineUsers={onlineUsers} />
         )}
 
         {/* Messages */}
-        <Chats oldMessages={oldMessages} group={group} chatUser={chatUser} />
+        <Chats
+          oldMessages={oldMessages}
+          group={group}
+          chatUser={chatUser}
+          onlineUsers={onlineUsers}
+          setOnlineUsers={setOnlineUsers}
+        />
       </div>
     </div>
   );
