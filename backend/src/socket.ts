@@ -35,7 +35,7 @@ export function setupSocket(io: Server) {
             
             if (socket.room) {
                 
-                await produceMessage(process.env.KAFKA_TOPIC, data)
+                await produceMessage(process.env.KAFKA_TOPIC!, data)
                 io.to(socket.room).emit("message", data);
             }
         });

@@ -21,4 +21,6 @@ type MessageType={
     group_id:string
     name:string
     created_at:string
+    fileUrl?: string;
+    fileType?: string; // image/png, application/pdf
 }
