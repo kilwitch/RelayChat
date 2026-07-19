@@ -21,4 +21,6 @@ type MessageType={
     group_id:string
     name:string
     created_at:string
+    fileUrl?: string    // Public Cloudinary URL (optional for text-only messages)
+    fileType?: string   // e.g. "image/png", "application/pdf"
 }

@@ -1,5 +1,4 @@
 import { Socket, Server } from "socket.io";
-import prisma from "./config/db.config.js";
 import { produceMessage } from "./helper.js";
 
 export interface CustomSocket extends Socket {
@@ -31,36 +30,49 @@ export function setupSocket(io: Server) {
         socket.userName =
             typeof rawName === "string" && rawName.trim() !== "" && rawName !== "Unknown"
                 ? rawName.trim()
-                : null!; // will be filtered below
+                : undefined;
 
         next();
     });
 
     nsp.on("connection", (socket: CustomSocket) => {
 
-        if (socket.room && socket.userName) {
+        if (socket.room) {
             socket.join(socket.room);
 
-            // Add to the room's online set
-            if (!roomOnlineUsers.has(socket.room)) {
-                roomOnlineUsers.set(socket.room, new Set());
+            if (socket.userName) {
+                // Add to the room's online set
+                if (!roomOnlineUsers.has(socket.room)) {
+                    roomOnlineUsers.set(socket.room, new Set());
+                }
+                roomOnlineUsers.get(socket.room)!.add(socket.userName);
+
+                // 1. Send the existing online users snapshot to THIS socket only
+                const currentNames = Array.from(roomOnlineUsers.get(socket.room)!);
+                socket.emit("onlineUsersSnapshot", { names: currentNames });
+
+                // 2. Tell everyone else in the room that this user just came online
+                socket.to(socket.room).emit("userOnline", { name: socket.userName });
             }
-            roomOnlineUsers.get(socket.room)!.add(socket.userName);
-
-            // 1. Send the existing online users snapshot to THIS socket only
-            const currentNames = Array.from(roomOnlineUsers.get(socket.room)!);
-            socket.emit("onlineUsersSnapshot", { names: currentNames });
-
-            // 2. Tell everyone else in the room that this user just came online
-            socket.to(socket.room).emit("userOnline", { name: socket.userName });
         }
 
-        socket.on("message", async(data) => {
-            
+        socket.on("message", async (data) => {
             if (socket.room) {
-                
-                await produceMessage(process.env.KAFKA_TOPIC!, data)
+                await produceMessage(process.env.KAFKA_TOPIC!, data);
                 io.to(socket.room).emit("message", data);
+            }
+        });
+
+        // typing indicator events
+        socket.on("typing", (data: { name: string }) => {
+            if (socket.room) {
+                socket.to(socket.room).emit("typing", data);
+            }
+        });
+
+        socket.on("stopTyping", (data: { name: string }) => {
+            if (socket.room) {
+                socket.to(socket.room).emit("stopTyping", data);
             }
         });
 

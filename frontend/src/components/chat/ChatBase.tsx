@@ -1,9 +1,10 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import ChatNav from "./ChatNav";
 import ChatUserDialog from "./ChatUserDialog";
 import ChatSidebar from "./ChatSidebar";
 import Chats from "./Chats";
+import { getSocket } from "@/lib/socket.config";
 
 export default function ChatBase({
   group,
@@ -16,6 +17,8 @@ export default function ChatBase({
 }) {
   const [open, setOpen] = useState(true);
   const [chatUser, setChatUser] = useState<GroupChatUserType>();
+
+  
   const [onlineUsers, setOnlineUsers] = useState<Set<string>>(new Set());
 
   useEffect(() => {
@@ -25,6 +28,38 @@ export default function ChatBase({
       setChatUser(pData);
     }
   }, [group.id]);
+
+ 
+  const socket = useMemo(() => {
+    const s = getSocket();
+    s.auth = { room: group.id };
+    return s.connect();
+  }, [group.id]);
+
+  useEffect(() => {
+    
+    socket.on("onlineUsersSnapshot", ({ names }: { names: string[] }) => {
+      setOnlineUsers(new Set(names));
+    });
+
+    socket.on("userOnline", (data: { name: string }) => {
+      setOnlineUsers((prev) => new Set([...prev, data.name]));
+    });
+
+    socket.on("userOffline", (data: { name: string }) => {
+      setOnlineUsers((prev) => {
+        const next = new Set(prev);
+        next.delete(data.name);
+        return next;
+      });
+    });
+
+    return () => {
+      socket.off("onlineUsersSnapshot");
+      socket.off("userOnline");
+      socket.off("userOffline");
+    };
+  }, [socket]);
 
   return (
     <div className="flex">

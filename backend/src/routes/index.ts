@@ -4,6 +4,7 @@ import authMiddleware from "../middlewares/AuthMiddlewares.js";
 import ChatGroupController from "../controllers/ChatGroupController.js";
 import ChatGroupUserController from "../controllers/ChatGroupUserController.js";
 import ChatsController from "../controllers/ChatsController.js";
+import uploadRoutes from "./upload.js";
 const router=Router();
 
 // auth routes
@@ -24,5 +25,8 @@ router.post('/chat-group-users', ChatGroupUserController.store);
 
 //chats messages
 router.get('/chats/:groupId', ChatsController.index);
+
+// file upload (Cloudinary)
+router.use('/upload', uploadRoutes);
 
 export default router;
