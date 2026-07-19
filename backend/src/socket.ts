@@ -6,7 +6,7 @@ export interface CustomSocket extends Socket {
     userName?: string;
 }
 
-// Track online users per room: roomId -> Set of userNames
+
 const roomOnlineUsers = new Map<string, Set<string>>();
 
 export function setupSocket(io: Server) {
@@ -22,10 +22,10 @@ export function setupSocket(io: Server) {
             return next(new Error("invalid room: no room provided in auth or headers"));
         }
 
-        // headers.room can be string | string[] — always coerce to string
+        
         socket.room = Array.isArray(rawRoom) ? rawRoom[0] : rawRoom;
 
-        // Store the user's display name for presence events
+        
         const rawName = socket.handshake.auth?.userName;
         socket.userName =
             typeof rawName === "string" && rawName.trim() !== "" && rawName !== "Unknown"
@@ -41,17 +41,17 @@ export function setupSocket(io: Server) {
             socket.join(socket.room);
 
             if (socket.userName) {
-                // Add to the room's online set
+                
                 if (!roomOnlineUsers.has(socket.room)) {
                     roomOnlineUsers.set(socket.room, new Set());
                 }
                 roomOnlineUsers.get(socket.room)!.add(socket.userName);
 
-                // 1. Send the existing online users snapshot to THIS socket only
+                
                 const currentNames = Array.from(roomOnlineUsers.get(socket.room)!);
                 socket.emit("onlineUsersSnapshot", { names: currentNames });
 
-                // 2. Tell everyone else in the room that this user just came online
+                
                 socket.to(socket.room).emit("userOnline", { name: socket.userName });
             }
         }

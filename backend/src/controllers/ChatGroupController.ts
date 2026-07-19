@@ -80,10 +80,8 @@ class ChatGroupController{
 
      static async destroy(req:Request, res:Response){
         try {
-            
             const {id}= req.params;
-            await prisma.chatGroup.delete({
-
+            await prisma.chatGroup.deleteMany({
                 where:{
                     id:id
                 }

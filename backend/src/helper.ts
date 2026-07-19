@@ -14,18 +14,24 @@ export const consumeMessages = async (topic: string) => {
 
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
-      const data = JSON.parse(message.value!.toString());
-      console.log({
-        partition,
-        offset: message.offset,
-        value: data,
-      });
+      try {
+        const data = JSON.parse(message.value!.toString());
+        console.log({
+          partition,
+          offset: message.offset,
+          value: data,
+        });
 
-      await prisma.chats.create({
-        data: data,
-      });
-
-      // Process the message (e.g., save to DB, trigger some action, etc.)
+        const { fileName, file, ...chatData } = data;
+        await prisma.chats.create({
+          data: {
+            ...chatData,
+            fileUrl: chatData.fileUrl || file || null,
+          },
+        });
+      } catch (err: any) {
+        console.error(`[Kafka Consumer] Skip message offset ${message.offset} (group deleted or invalid):`, err?.message || err);
+      }
     },
   });
 };

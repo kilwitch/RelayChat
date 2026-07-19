@@ -150,6 +150,7 @@ export default function Chats({
 
     let fileUrl: string | undefined;
     let fileType: string | undefined;
+    let fileName: string | undefined;
 
     if (selectedFile) {
       try {
@@ -172,6 +173,7 @@ export default function Chats({
         const data = await res.json();
         fileUrl = data.url;
         fileType = data.type;
+        fileName = data.fileName;  // original filename from backend
       } catch (err) {
         console.error("Upload error:", err);
         setUploading(false);
@@ -191,6 +193,7 @@ export default function Chats({
       group_id: group.id,
       fileUrl,
       fileType,
+      fileName,  // pass original name so download link is meaningful
     };
 
     socket.emit("message", payload);
@@ -222,10 +225,11 @@ export default function Chats({
               }`}
             >
               {msg.message && <p>{msg.message}</p>}
-              {msg.fileUrl && (
+              {(msg.fileUrl || msg.file) && (
                 <FileMessage
-                  fileUrl={msg.fileUrl}
+                  fileUrl={(msg.fileUrl || msg.file)!}
                   fileType={msg.fileType ?? "application/octet-stream"}
+                  fileName={msg.fileName}  // show real filename on the download link
                 />
               )}
             </div>
@@ -276,7 +280,7 @@ export default function Chats({
             type="file"
             ref={fileInputRef}
             className="hidden"
-            accept="image/*,.pdf,.mp4"
+            accept="image/*,.pdf,.mp4,.docx,.xlsx,.zip"
             onChange={handleFileChange}
           />
 

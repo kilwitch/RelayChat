@@ -1,15 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 
-// Mapping from MIME type prefix → readable extension label
+// Mapping from MIME type prefix / full type → readable extension label
 const mimeToExt: Record<string, string> = {
   "image/": "Image",
   "video/": "Video",
   "application/pdf": "PDF",
+  "application/msword": "DOC",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "DOCX",
+  "application/vnd.ms-excel": "XLS",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": "XLSX",
+  "application/zip": "ZIP",
+  "application/x-zip-compressed": "ZIP",
+  "text/plain": "TXT",
 };
 
 export function getExtension(mimeType: string): string {
   for (const [key, label] of Object.entries(mimeToExt)) {
-    if (mimeType.startsWith(key)) return label;
+    if (mimeType.startsWith(key) || mimeType === key) return label;
   }
   return "File";
 }
@@ -23,6 +30,8 @@ export default function FileMessage({
   fileType: string;
   fileName?: string;
 }) {
+  const [isDownloading, setIsDownloading] = useState(false);
+
   // Render images inline
   if (fileType.startsWith("image/")) {
     return (
@@ -47,16 +56,50 @@ export default function FileMessage({
     );
   }
 
-  // PDFs and all other files → download link
+  // Cloudinary attachment URL for direct force-download fallback
+  const attachmentUrl = fileUrl.includes("/upload/")
+    ? fileUrl.replace("/upload/", "/upload/fl_attachment/")
+    : fileUrl;
+
+  // PDFs and all other files → force-download via Fetch and Blob URL
+  const handleDownload = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    if (isDownloading) return;
+    setIsDownloading(true);
+    
+    try {
+      const response = await fetch(fileUrl);
+      if (!response.ok) throw new Error("Failed to fetch file");
+      
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = fileName || `download.${getExtension(fileType).toLowerCase()}`;
+      document.body.appendChild(link);
+      link.click();
+      
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error("Download failed, falling back to direct attachment URL:", error);
+      // Fallback: trigger Cloudinary force-download URL in new window/tab
+      window.open(attachmentUrl, "_blank");
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
   return (
     <a
-      href={fileUrl}
+      href={attachmentUrl}
+      onClick={handleDownload}
       target="_blank"
       rel="noopener noreferrer"
-      download
-      className="flex items-center gap-2 underline text-sm"
+      className={`flex items-center gap-2 underline text-sm ${isDownloading ? "opacity-50 cursor-wait" : ""}`}
     >
-      📎 {fileName ?? `Download ${getExtension(fileType)}`}
+      📎 {isDownloading ? "Downloading..." : (fileName ?? `Download ${getExtension(fileType)}`)}
     </a>
   );
 }

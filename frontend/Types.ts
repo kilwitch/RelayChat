@@ -23,4 +23,6 @@ type MessageType={
     created_at:string
     fileUrl?: string    // Public Cloudinary URL (optional for text-only messages)
     fileType?: string   // e.g. "image/png", "application/pdf"
-}
+    fileName?: string   // Original filename for display in download links
+    file?: string       // Database stored file URL
+}
