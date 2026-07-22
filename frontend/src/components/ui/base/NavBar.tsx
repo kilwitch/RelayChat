@@ -5,22 +5,32 @@ import { Button } from "../button";
 import LoginModal from "@/components/auth/LoginModal";
 import { CustomUser } from "@/app/api/auth/[...nextauth]/options";
 
-
 export default function Navbar({ user }: { user: CustomUser | null }) {
   return (
-    <nav className="p-6 flex justify-between items-center bg-white shadow-sm">
-      
-        <h1 className="text-xl md:text-2xl font-extrabold">QuickChat</h1>
-      
-      
-      <div className="flex items-center space-x-2 md:space-x-6 text-gray-700">
-        <Link href="/">Home</Link>
-        <Link href="#features">Features</Link>
+    <nav className="sticky top-0 z-50 w-full px-6 py-4 flex justify-between items-center bg-[#030303]/80 backdrop-blur-md border-b border-[#27272A]">
+      <div className="flex items-center gap-3">
+        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#34D399] to-[#60A5FA] flex items-center justify-center font-bold text-black text-sm shadow-sm shadow-[#34D399]/20">
+          R
+        </div>
+        <Link href="/" className="text-xl md:text-2xl font-semibold tracking-tight text-white hover:opacity-90 transition-opacity">
+          Relay<span className="text-[#34D399]">Chat</span>
+        </Link>
+      </div>
+
+      <div className="flex items-center space-x-4 md:space-x-8 text-sm font-medium text-[#A1A1AA]">
+        <Link href="/" className="hover:text-white transition-colors">
+          Home
+        </Link>
+        <Link href="#features" className="hover:text-white transition-colors">
+          Features
+        </Link>
         {!user ? (
           <LoginModal />
         ) : (
           <Link href="/dashboard">
-            <Button>Dashboard</Button>
+            <Button className="bg-[#34D399] text-[#030303] hover:bg-[#34D399]/90 font-medium px-4 py-2 rounded-lg transition-all shadow-sm shadow-[#34D399]/20">
+              Dashboard
+            </Button>
           </Link>
         )}
       </div>

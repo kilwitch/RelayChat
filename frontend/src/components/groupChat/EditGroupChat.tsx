@@ -76,22 +76,43 @@ export default function EditGroupChat({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent onInteractOutside={(e) => e.preventDefault()}>
+      <DialogContent className="bg-[#18181B] border border-[#27272A] text-white sm:max-w-md rounded-xl p-6" onInteractOutside={(e) => e.preventDefault()}>
         <DialogHeader>
-          <DialogTitle>Update group chat</DialogTitle>
+          <DialogTitle className="text-xl font-medium tracking-tight text-white">Update Group Chat</DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="mt-4">
-            <Input placeholder="Enter chat title" {...register("title")} />
-            <span className="text-red-400">{errors.title?.message}</span>
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-4 space-y-4">
+          <div>
+            <label className="text-xs font-mono text-[#A1A1AA] uppercase tracking-wider block mb-1.5">
+              Room Title
+            </label>
+            <Input
+              placeholder="Enter chat title"
+              className="bg-[#030303] border-[#27272A] text-white placeholder:text-[#A1A1AA]/60 focus:ring-[#34D399] rounded-lg px-3 py-2 text-sm"
+              {...register("title")}
+            />
+            {errors.title?.message && (
+              <span className="text-xs text-red-400 mt-1 block font-mono">{errors.title.message}</span>
+            )}
           </div>
-          <div className="mt-4">
-            <Input placeholder="Enter passcode" {...register("passcode")} />
-            <span className="text-red-400">{errors.passcode?.message}</span>
+          <div>
+            <label className="text-xs font-mono text-[#A1A1AA] uppercase tracking-wider block mb-1.5">
+              Passcode
+            </label>
+            <Input
+              placeholder="Enter passcode"
+              className="bg-[#030303] border-[#27272A] text-white placeholder:text-[#A1A1AA]/60 focus:ring-[#34D399] rounded-lg px-3 py-2 text-sm font-mono"
+              {...register("passcode")}
+            />
+            {errors.passcode?.message && (
+              <span className="text-xs text-red-400 mt-1 block font-mono">{errors.passcode.message}</span>
+            )}
           </div>
-          <div className="mt-4">
-            <Button className="w-full" disabled={loading}>
-              {loading ? "Processing.." : "Submit"}
+          <div className="pt-2">
+            <Button
+              className="w-full bg-[#34D399] text-[#030303] hover:bg-[#34D399]/90 font-medium py-2.5 rounded-lg transition-all shadow-sm shadow-[#34D399]/20"
+              disabled={loading}
+            >
+              {loading ? "Updating..." : "Save Changes"}
             </Button>
           </div>
         </form>

@@ -55,8 +55,8 @@ export default function GroupChatCardMenu({
       <DropdownMenu>
         {/* asChild ensures the HTML renders cleanly, align="end" keeps the dropdown matching the right border */}
         <DropdownMenuTrigger asChild>
-          <button className="absolute top-4 right-4 p-1 rounded-full hover:bg-neutral-100 transition-colors focus:outline-none z-10">
-            <DotsVerticalIcon className="h-5 w-5" />
+          <button className="p-1.5 rounded-md text-[#A1A1AA] hover:text-white hover:bg-[#27272A] transition-colors focus:outline-none">
+            <DotsVerticalIcon className="h-4 w-4" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">

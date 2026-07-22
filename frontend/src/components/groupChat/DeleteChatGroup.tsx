@@ -48,18 +48,25 @@ export default function DeleteChatGroup({
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
-      <AlertDialogContent>
+      <AlertDialogContent className="bg-[#18181B] border border-[#27272A] text-white sm:max-w-md rounded-xl p-6">
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your chat
-            group and it's conversations.
+          <AlertDialogTitle className="text-xl font-medium tracking-tight text-white">
+            Delete Chat Room?
+          </AlertDialogTitle>
+          <AlertDialogDescription className="text-[#A1A1AA] text-sm leading-[1.6]">
+            This action cannot be undone. This will permanently delete your chat room and all associated messages.
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction disabled={loading} onClick={deleteChatGroup}>
-            {loading ? "Processing.." : "Continue"}
+        <AlertDialogFooter className="mt-6 flex gap-3">
+          <AlertDialogCancel className="bg-[#030303] border-[#27272A] text-[#A1A1AA] hover:bg-[#27272A] hover:text-white rounded-lg">
+            Cancel
+          </AlertDialogCancel>
+          <AlertDialogAction
+            disabled={loading}
+            onClick={deleteChatGroup}
+            className="bg-red-500 hover:bg-red-600 text-white font-medium rounded-lg px-4"
+          >
+            {loading ? "Deleting..." : "Delete Room"}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

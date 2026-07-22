@@ -62,9 +62,9 @@ export default function ChatBase({
   }, [socket]);
 
   return (
-    <div className="flex">
+    <div className="flex h-screen overflow-hidden bg-[#030303]">
       <ChatSidebar users={users} onlineUsers={onlineUsers} />
-      <div className="w-full md:w-4/5 bg-linear-to-b from-gray-50 to-white">
+      <div className="w-full md:flex-1 bg-[#030303] flex flex-col h-screen overflow-hidden">
         {open ? (
           <ChatUserDialog open={open} setOpen={setOpen} group={group} />
         ) : (

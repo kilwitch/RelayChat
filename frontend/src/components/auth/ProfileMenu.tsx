@@ -45,7 +45,7 @@ export default function ProfileMenu({
           <Button
             id="profile-menu-trigger"
             variant="outline"
-            className="rounded-full p-0 w-10 h-10 overflow-hidden border-2 border-violet-400/60 hover:border-violet-500 transition-all duration-200 shadow-sm hover:shadow-violet-200"
+            className="rounded-full p-0 w-10 h-10 overflow-hidden border-2 border-[#34D399]/60 hover:border-[#34D399] transition-all duration-200 shadow-sm hover:shadow-[#34D399]/20"
           >
             <UserAvatar name={name} image={image} />
           </Button>

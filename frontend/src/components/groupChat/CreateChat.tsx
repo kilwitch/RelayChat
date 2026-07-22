@@ -70,32 +70,55 @@ export default function CreateChat({user}:{user:CustomUser}) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-  <DialogTrigger asChild>
-    <Button>Create Group</Button>
-  </DialogTrigger>
-  <DialogContent onInteractOutside={(e)=> e.preventDefault()}>
+      <DialogTrigger asChild>
+        <Button className="bg-[#34D399] text-[#030303] hover:bg-[#34D399]/90 font-medium px-4 py-2 rounded-lg transition-all shadow-sm shadow-[#34D399]/20 flex items-center gap-2">
+          <span>+ Create Group</span>
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="bg-[#18181B] border border-[#27272A] text-white sm:max-w-md rounded-xl p-6" onInteractOutside={(e) => e.preventDefault()}>
+        <DialogHeader>
+          <DialogTitle className="text-xl font-medium tracking-tight text-white">Create New Chat Room</DialogTitle>
+        </DialogHeader>
 
-    <DialogHeader>
-      <DialogTitle>Create your new Chat</DialogTitle>
-      
-    </DialogHeader>
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-4 space-y-4">
+          <div>
+            <label className="text-xs font-mono text-[#A1A1AA] uppercase tracking-wider block mb-1.5">
+              Room Title
+            </label>
+            <Input
+              placeholder="e.g. Design Sync Room"
+              className="bg-[#030303] border-[#27272A] text-white placeholder:text-[#A1A1AA]/60 focus:ring-[#34D399] rounded-lg px-3 py-2 text-sm"
+              {...register("title")}
+            />
+            {errors?.title?.message && (
+              <span className="text-xs text-red-400 mt-1 block font-mono">{errors.title.message}</span>
+            )}
+          </div>
 
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div className='mt-4'>
-        <Input placeholder='Enter chat title' {...register("title")}/>
-        <span className='text-red-500'>{errors?.title?.message}</span>
-      </div>
-      <div className='mt-4'>
-        <Input placeholder='Enter chat passcode' {...register("passcode")}/>
-        <span className='text-red-500'>{errors?.passcode?.message}</span>
-      </div>
-      <div className='mt-4'>
-        <Button className='w-full' disabled={loading} >
-          {loading ?"Processing...":"Submit"}</Button>
-      </div>
+          <div>
+            <label className="text-xs font-mono text-[#A1A1AA] uppercase tracking-wider block mb-1.5">
+              Passcode
+            </label>
+            <Input
+              placeholder="e.g. 123456"
+              className="bg-[#030303] border-[#27272A] text-white placeholder:text-[#A1A1AA]/60 focus:ring-[#34D399] rounded-lg px-3 py-2 text-sm font-mono"
+              {...register("passcode")}
+            />
+            {errors?.passcode?.message && (
+              <span className="text-xs text-red-400 mt-1 block font-mono">{errors.passcode.message}</span>
+            )}
+          </div>
 
-    </form>
-  </DialogContent>
-</Dialog>
-  )
+          <div className="pt-2">
+            <Button
+              className="w-full bg-[#34D399] text-[#030303] hover:bg-[#34D399]/90 font-medium py-2.5 rounded-lg transition-all shadow-sm shadow-[#34D399]/20"
+              disabled={loading}
+            >
+              {loading ? "Creating Room..." : "Create Room"}
+            </Button>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
 }

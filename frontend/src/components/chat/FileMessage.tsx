@@ -97,9 +97,14 @@ export default function FileMessage({
       onClick={handleDownload}
       target="_blank"
       rel="noopener noreferrer"
-      className={`flex items-center gap-2 underline text-sm ${isDownloading ? "opacity-50 cursor-wait" : ""}`}
+      className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-[#030303] border border-[#27272A] hover:border-[#34D399]/40 text-xs font-mono text-white transition-all ${
+        isDownloading ? "opacity-50 cursor-wait" : ""
+      }`}
     >
-      📎 {isDownloading ? "Downloading..." : (fileName ?? `Download ${getExtension(fileType)}`)}
+      <span className="text-[#34D399]">📎</span>
+      <span className="truncate max-w-[200px]">
+        {isDownloading ? "Downloading..." : (fileName ?? `Download ${getExtension(fileType)}`)}
+      </span>
     </a>
   );
 }

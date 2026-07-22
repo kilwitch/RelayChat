@@ -33,88 +33,37 @@ export default function ProfileModal({ open, setOpen }: ProfileModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent
-        className="sm:max-w-sm p-0 overflow-hidden border-0"
-        style={{
-          background: 'linear-gradient(135deg, #0f0c29, #302b63, #24243e)',
-          borderRadius: '1.25rem',
-          boxShadow:
-            '0 25px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.08)',
-        }}
-      >
-        {/* Decorative blurred background blobs */}
+      <DialogContent className="sm:max-w-sm p-0 overflow-hidden border border-[#27272A] bg-[#18181B] text-white rounded-xl shadow-2xl shadow-black/80">
+        {/* Decorative ambient background glows */}
         <div
           aria-hidden
-          style={{
-            position: 'absolute',
-            inset: 0,
-            pointerEvents: 'none',
-            overflow: 'hidden',
-            borderRadius: '1.25rem',
-          }}
+          className="absolute inset-0 pointer-events-none overflow-hidden rounded-xl"
         >
           <div
+            className="absolute -top-16 -right-16 w-52 h-52 rounded-full"
             style={{
-              position: 'absolute',
-              top: '-60px',
-              right: '-60px',
-              width: '200px',
-              height: '200px',
-              borderRadius: '50%',
-              background: 'radial-gradient(circle, rgba(109,40,217,0.45) 0%, transparent 70%)',
+              background: 'radial-gradient(circle, rgba(52,211,153,0.18) 0%, transparent 70%)',
               filter: 'blur(30px)',
             }}
           />
           <div
+            className="absolute -bottom-10 -left-10 w-44 h-44 rounded-full"
             style={{
-              position: 'absolute',
-              bottom: '-40px',
-              left: '-40px',
-              width: '160px',
-              height: '160px',
-              borderRadius: '50%',
-              background: 'radial-gradient(circle, rgba(236,72,153,0.35) 0%, transparent 70%)',
+              background: 'radial-gradient(circle, rgba(96,165,250,0.15) 0%, transparent 70%)',
               filter: 'blur(25px)',
             }}
           />
         </div>
 
         {/* Header banner */}
-        <div
-          className="relative h-24 w-full flex-shrink-0"
-          style={{
-            background:
-              'linear-gradient(90deg, rgba(109,40,217,0.7) 0%, rgba(236,72,153,0.6) 100%)',
-          }}
-        />
+        <div className="relative h-24 w-full flex-shrink-0 bg-gradient-to-r from-[#34D399]/20 via-[#60A5FA]/20 to-[#18181B] border-b border-[#27272A]" />
 
-        {/* Avatar — centred over the banner */}
-        <div className="relative flex flex-col items-center px-8 pb-8" style={{ marginTop: '-48px' }}>
-          <div
-            style={{
-              padding: '4px',
-              borderRadius: '50%',
-              background: 'linear-gradient(135deg, #7c3aed, #ec4899)',
-              boxShadow: '0 0 0 4px rgba(255,255,255,0.06)',
-            }}
-          >
-            <Avatar
-              style={{
-                width: '88px',
-                height: '88px',
-                fontSize: '2rem',
-                fontWeight: 700,
-              }}
-            >
+        {/* Avatar — centered over the banner */}
+        <div className="relative flex flex-col items-center px-6 pb-6 -mt-12">
+          <div className="p-1 rounded-full bg-gradient-to-br from-[#34D399] to-[#60A5FA] shadow-md shadow-[#34D399]/20">
+            <Avatar className="w-20 h-20 border-2 border-[#030303]">
               <AvatarImage src={user?.image ?? undefined} alt={user?.name ?? 'User'} />
-              <AvatarFallback
-                style={{
-                  background: 'linear-gradient(135deg, #7c3aed, #ec4899)',
-                  color: '#fff',
-                  fontSize: '1.75rem',
-                  fontWeight: 700,
-                }}
-              >
+              <AvatarFallback className="bg-gradient-to-br from-[#34D399] to-[#60A5FA] text-[#030303] text-xl font-bold">
                 {initials}
               </AvatarFallback>
             </Avatar>
@@ -127,38 +76,20 @@ export default function ProfileModal({ open, setOpen }: ProfileModalProps) {
           </DialogDescription>
 
           {/* Name */}
-          <h2
-            className="mt-4 text-center text-xl font-bold leading-tight"
-            style={{ color: '#f1f5f9' }}
-          >
+          <h2 className="mt-3 text-center text-xl font-medium tracking-tight text-white">
             {user?.name ?? 'Unknown User'}
           </h2>
 
           {/* Email */}
-          <p
-            className="mt-1 text-center text-sm"
-            style={{ color: 'rgba(226,232,240,0.65)' }}
-          >
+          <p className="mt-1 text-center text-xs font-mono text-[#A1A1AA]">
             {user?.email ?? '—'}
           </p>
 
           {/* Divider */}
-          <div
-            className="my-5 w-full"
-            style={{
-              height: '1px',
-              background: 'rgba(255,255,255,0.08)',
-            }}
-          />
+          <div className="my-4 w-full h-px bg-[#27272A]" />
 
           {/* Info card */}
-          <div
-            className="w-full rounded-xl px-4 py-3 space-y-3"
-            style={{
-              background: 'rgba(255,255,255,0.05)',
-              border: '1px solid rgba(255,255,255,0.08)',
-            }}
-          >
+          <div className="w-full rounded-lg bg-[#030303] border border-[#27272A] p-4 space-y-3.5">
             <ProfileField
               icon={
                 <svg
@@ -169,13 +100,13 @@ export default function ProfileModal({ open, setOpen }: ProfileModalProps) {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  style={{ width: 16, height: 16, color: '#a78bfa' }}
+                  className="w-4 h-4 text-[#34D399]"
                 >
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                   <circle cx="12" cy="7" r="4" />
                 </svg>
               }
-              label="Name"
+              label="Display Name"
               value={user?.name ?? '—'}
             />
             <ProfileField
@@ -188,13 +119,13 @@ export default function ProfileModal({ open, setOpen }: ProfileModalProps) {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  style={{ width: 16, height: 16, color: '#f472b6' }}
+                  className="w-4 h-4 text-[#60A5FA]"
                 >
                   <rect width="20" height="16" x="2" y="4" rx="2" />
                   <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                 </svg>
               }
-              label="Email"
+              label="Email Address"
               value={user?.email ?? '—'}
             />
           </div>
@@ -203,21 +134,7 @@ export default function ProfileModal({ open, setOpen }: ProfileModalProps) {
           <button
             id="profile-modal-close"
             onClick={() => setOpen(false)}
-            className="mt-5 w-full py-2.5 rounded-xl text-sm font-semibold transition-all duration-200"
-            style={{
-              background: 'linear-gradient(90deg, #7c3aed, #ec4899)',
-              color: '#fff',
-              border: 'none',
-              cursor: 'pointer',
-              letterSpacing: '0.02em',
-              boxShadow: '0 4px 15px rgba(124,58,237,0.35)',
-            }}
-            onMouseOver={(e) =>
-              ((e.currentTarget as HTMLButtonElement).style.opacity = '0.88')
-            }
-            onMouseOut={(e) =>
-              ((e.currentTarget as HTMLButtonElement).style.opacity = '1')
-            }
+            className="mt-5 w-full py-2.5 rounded-lg text-sm font-medium bg-[#34D399] text-[#030303] hover:bg-[#34D399]/90 transition-all shadow-sm shadow-[#34D399]/20"
           >
             Close
           </button>
@@ -238,18 +155,12 @@ function ProfileField({
 }) {
   return (
     <div className="flex items-center gap-3">
-      <span className="flex-shrink-0">{icon}</span>
+      <span className="flex-shrink-0 p-1.5 rounded-md bg-[#18181B] border border-[#27272A]">{icon}</span>
       <div className="min-w-0 flex-1">
-        <p
-          className="text-xs font-medium mb-0.5"
-          style={{ color: 'rgba(226,232,240,0.45)' }}
-        >
+        <p className="text-[11px] font-mono text-[#A1A1AA] uppercase tracking-wider mb-0.5">
           {label}
         </p>
-        <p
-          className="text-sm font-medium truncate"
-          style={{ color: '#e2e8f0' }}
-        >
+        <p className="text-sm font-medium text-white truncate">
           {value}
         </p>
       </div>

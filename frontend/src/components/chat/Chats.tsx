@@ -210,36 +210,50 @@ export default function Chats({
   };
 
   return (
-    <div className="flex flex-col h-[94vh] p-4">
-      
-      <div className="flex-1 overflow-y-auto flex flex-col-reverse">
+    <div className="flex flex-col h-[calc(100vh-65px)] p-4 sm:p-6 bg-[#030303]">
+      {/* Message Feed */}
+      <div className="flex-1 overflow-y-auto flex flex-col-reverse px-2 space-y-reverse space-y-3">
         <div ref={messagesEndRef} />
-        <div className="flex flex-col gap-2">
-          {messages.map((msg) => (
-            <div
-              key={msg.id}
-              className={`max-w-sm rounded-lg p-2 ${
-                msg.name === chatUser?.name
-                  ? "bg-linear-to-r from-blue-400 to-blue-600 text-white self-end"
-                  : "bg-linear-to-r from-gray-200 to-gray-300 text-black self-start"
-              }`}
-            >
-              {msg.message && <p>{msg.message}</p>}
-              {(msg.fileUrl || msg.file) && (
-                <FileMessage
-                  fileUrl={(msg.fileUrl || msg.file)!}
-                  fileType={msg.fileType ?? "application/octet-stream"}
-                  fileName={msg.fileName}  // show real filename on the download link
-                />
-              )}
-            </div>
-          ))}
+        <div className="flex flex-col gap-3">
+          {messages.map((msg) => {
+            const isSelf = msg.name === chatUser?.name;
+            return (
+              <div
+                key={msg.id}
+                className={`max-w-md sm:max-w-lg rounded-xl p-3.5 space-y-1.5 transition-all ${
+                  isSelf
+                    ? "bg-[#34D399] text-[#030303] self-end shadow-md shadow-[#34D399]/10"
+                    : "bg-[#18181B] border border-[#27272A] text-white self-start"
+                }`}
+              >
+                {!isSelf && (
+                  <span className="block text-[11px] font-mono font-semibold text-[#60A5FA]">
+                    {msg.name}
+                  </span>
+                )}
+                {msg.message && (
+                  <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">
+                    {msg.message}
+                  </p>
+                )}
+                {(msg.fileUrl || msg.file) && (
+                  <div className="pt-1">
+                    <FileMessage
+                      fileUrl={(msg.fileUrl || msg.file)!}
+                      fileType={msg.fileType ?? "application/octet-stream"}
+                      fileName={msg.fileName}
+                    />
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
 
-      
+      {/* Typing Users Bar */}
       {typingUsers.length > 0 && (
-        <div className="px-4 py-1 text-sm text-gray-500 italic animate-pulse">
+        <div className="px-3 py-1 text-xs font-mono text-[#34D399] italic animate-pulse">
           {typingUsers.length === 1
             ? `${typingUsers[0]} is typing...`
             : typingUsers.length === 2
@@ -248,25 +262,25 @@ export default function Chats({
         </div>
       )}
 
-      
-      <form onSubmit={handleSubmit} className="mt-2 flex flex-col gap-2">
+      {/* Input Form */}
+      <form onSubmit={handleSubmit} className="mt-3 flex flex-col gap-2">
         {/* File preview strip */}
         {selectedFile && (
-          <div className="flex items-center gap-2 p-2 bg-gray-100 rounded-lg text-sm">
+          <div className="flex items-center gap-3 p-3 bg-[#18181B] border border-[#27272A] rounded-xl text-xs font-mono text-white">
             {previewUrl ? (
               <img
                 src={previewUrl}
                 alt="preview"
-                className="w-12 h-12 object-cover rounded"
+                className="w-10 h-10 object-cover rounded-md border border-[#27272A]"
               />
             ) : (
-              <span>📎</span>
+              <span className="text-[#34D399] text-base">📎</span>
             )}
-            <span className="truncate flex-1">{selectedFile.name}</span>
+            <span className="truncate flex-1 text-[#A1A1AA]">{selectedFile.name}</span>
             <button
               type="button"
               onClick={clearFile}
-              className="text-red-500 font-bold"
+              className="text-[#A1A1AA] hover:text-red-400 font-bold px-2 py-1"
               aria-label="Remove file"
             >
               ✕
@@ -274,8 +288,7 @@ export default function Chats({
           </div>
         )}
 
-        <div className="flex items-center gap-2">
-          
+        <div className="flex items-center gap-2 bg-[#18181B] border border-[#27272A] p-2 rounded-xl focus-within:border-[#34D399]/50 transition-colors">
           <input
             type="file"
             ref={fileInputRef}
@@ -284,32 +297,29 @@ export default function Chats({
             onChange={handleFileChange}
           />
 
-          
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="p-2 text-gray-500 hover:text-blue-500 transition-colors"
+            className="p-2 text-[#A1A1AA] hover:text-[#34D399] transition-colors rounded-lg hover:bg-[#27272A]"
             title="Attach file"
             aria-label="Attach file"
           >
             📎
           </button>
 
-          
           <input
             type="text"
             placeholder="Type a message..."
             value={message}
-            className="flex-1 p-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500"
+            className="flex-1 bg-transparent text-white placeholder:text-[#A1A1AA]/60 text-sm outline-none px-2"
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleTyping}
           />
 
-         
           <button
             type="submit"
             disabled={uploading}
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg disabled:opacity-50 hover:bg-blue-600 transition-colors"
+            className="px-5 py-2 bg-[#34D399] text-[#030303] hover:bg-[#34D399]/90 font-medium text-sm rounded-lg disabled:opacity-50 transition-all shadow-sm shadow-[#34D399]/20"
           >
             {uploading ? "Uploading…" : "Send"}
           </button>

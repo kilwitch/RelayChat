@@ -13,17 +13,26 @@ export default function ChatNav({
   onlineUsers: Set<string>;
 }) {
   return (
-    <nav className="w-full flex justify-between items-center px-6 py-2 border-b">
-      <div className="flex space-x-4 md:space-x-0 items-center">
+    <nav className="w-full flex justify-between items-center px-6 py-4 border-b border-[#27272A] bg-[#18181B]">
+      <div className="flex items-center gap-4">
         <div className="md:hidden">
           <MobileChatSidebar users={users} onlineUsers={onlineUsers} />
         </div>
 
-        <h1 className="text-2xl font-bold bg-linear-to-r from-pink-400 to-purple-600 text-transparent bg-clip-text">
-          {chatGroup.title}
-        </h1>
+        <div>
+          <h1 className="text-xl font-medium tracking-tight bg-gradient-to-r from-[#34D399] via-[#60A5FA] to-white text-transparent bg-clip-text">
+            {chatGroup.title}
+          </h1>
+          <span className="text-xs font-mono text-[#A1A1AA]">ID: {chatGroup.id.slice(0, 8)}...</span>
+        </div>
       </div>
-      <p>{user?.name}</p>
+
+      {user?.name && (
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#030303] border border-[#27272A]">
+          <span className="w-2 h-2 rounded-full bg-[#34D399]" />
+          <span className="text-xs font-mono text-[#A1A1AA] font-medium">{user.name}</span>
+        </div>
+      )}
     </nav>
   );
 }

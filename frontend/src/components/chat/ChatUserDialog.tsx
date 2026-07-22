@@ -67,30 +67,40 @@ export default function ChatUserDialog({
 
   return (
     <Dialog open={open}>
-      <DialogContent>
+      <DialogContent className="bg-[#18181B] border border-[#27272A] text-white sm:max-w-md rounded-xl p-6">
         <DialogHeader>
-          <DialogTitle>Add Name and Passcode</DialogTitle>
-          <DialogDescription>
-            Add your name and passcode to join in room
+          <DialogTitle className="text-xl font-medium tracking-tight text-white">Join Chat Room</DialogTitle>
+          <DialogDescription className="text-[#A1A1AA] text-sm leading-[1.6]">
+            Enter your display name and room passcode to enter the conversation.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit}>
-          <div className="mt-2">
+        <form onSubmit={handleSubmit} className="mt-4 space-y-4">
+          <div>
+            <label className="text-xs font-mono text-[#A1A1AA] uppercase tracking-wider block mb-1.5">
+              Your Display Name
+            </label>
             <Input
-              placeholder="Enter your name"
+              placeholder="e.g. Alex"
               value={state.name}
+              className="bg-[#030303] border-[#27272A] text-white placeholder:text-[#A1A1AA]/60 focus:ring-[#34D399] rounded-lg px-3 py-2 text-sm"
               onChange={(e) => setState({ ...state, name: e.target.value })}
             />
           </div>
-          <div className="mt-2">
+          <div>
+            <label className="text-xs font-mono text-[#A1A1AA] uppercase tracking-wider block mb-1.5">
+              Room Passcode
+            </label>
             <Input
-              placeholder="Enter your passcode"
+              placeholder="Enter passcode"
               value={state.passcode}
+              className="bg-[#030303] border-[#27272A] text-white placeholder:text-[#A1A1AA]/60 focus:ring-[#34D399] rounded-lg px-3 py-2 text-sm font-mono"
               onChange={(e) => setState({ ...state, passcode: e.target.value })}
             />
           </div>
-          <div className="mt-2">
-            <Button className="w-full">Submit</Button>
+          <div className="pt-2">
+            <Button className="w-full bg-[#34D399] text-[#030303] hover:bg-[#34D399]/90 font-medium py-2.5 rounded-lg transition-all shadow-sm shadow-[#34D399]/20">
+              Enter Room
+            </Button>
           </div>
         </form>
       </DialogContent>
