@@ -12,8 +12,8 @@ export default function GroupChatCard({
 }) {
   return (
     <Card className="relative group bg-[#18181B] border border-[#27272A] rounded-lg transition-all duration-200 hover:border-[#34D399]/40 hover:shadow-lg hover:shadow-[#34D399]/5 overflow-hidden">
-      <CardHeader className="flex-row justify-between items-start pt-6 pb-2 px-6">
-        <CardTitle className="text-xl font-medium tracking-tight text-white pr-8 truncate">
+      <CardHeader className="flex flex-row items-center justify-between pt-6 pb-2 px-6 space-y-0">
+        <CardTitle className="text-xl font-medium tracking-tight text-white truncate pr-4">
           {group.title}
         </CardTitle>
         <GroupChatCardMenu user={user} group={group} />
