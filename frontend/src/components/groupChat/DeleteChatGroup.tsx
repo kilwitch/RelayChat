@@ -13,6 +13,7 @@ import axios from "axios";
 import { CHAT_GROUP_URL } from "@/lib/apiEndPoints";
 import { toast } from "sonner";
 import { clearCache } from "@/actions/common";
+import { useRouter } from "next/navigation";
 
 export default function DeleteChatGroup({
   open,
@@ -26,6 +27,8 @@ export default function DeleteChatGroup({
   token: string;
 }) {
   const [loading, setLoading] = useState(false);
+  const router=useRouter();
+
   const deleteChatGroup = async () => {
     setLoading(true);
     try {
@@ -35,9 +38,10 @@ export default function DeleteChatGroup({
         },
       });
       if (data?.message) {
-        clearCache("dashboard");
+        await clearCache("dashboard");
         toast.success(data?.message);
         setOpen(false);
+        router.refresh();
       }
       setLoading(false);
     } catch (error) {

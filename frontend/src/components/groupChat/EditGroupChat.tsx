@@ -20,6 +20,7 @@ import axios, { AxiosError } from "axios";
 import { CHAT_GROUP_URL } from "@/lib/apiEndPoints";
 import { toast } from "sonner";
 import { clearCache } from "@/actions/common";
+import { useRouter } from "next/navigation";
 
 export default function EditGroupChat({
   user,
@@ -33,7 +34,8 @@ export default function EditGroupChat({
   setOpen: Dispatch<SetStateAction<boolean>>;
 }) {
   const [loading, setLoading] = useState(false);
-
+  const router = useRouter()
+  
   const {
     register,
     handleSubmit,
@@ -61,7 +63,8 @@ export default function EditGroupChat({
       if (data?.message) {
         setOpen(false);
         toast.success(data?.message);
-        clearCache("dashboard");
+        await clearCache("dashboard");
+        router.refresh();
       }
       setLoading(false);
     } catch (error) {

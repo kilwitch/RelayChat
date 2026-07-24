@@ -1,8 +1,10 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { CustomUser } from "@/app/api/auth/[...nextauth]/options";
+import LoginModal from "@/components/auth/LoginModal";
 
-export default function HeroSection() {
+export default function HeroSection({user}:{user:CustomUser |null}) {
   return (
     <section className="relative flex-1 flex flex-col items-center justify-center text-center px-6 py-20 md:py-28 overflow-hidden bg-[#030303]">
       {/* Ambient background glow */}
@@ -26,13 +28,21 @@ export default function HeroSection() {
         Engineered for tomorrow. RelayChat makes it effortless to create secure, instant private rooms and start seamless conversations in seconds.
       </p>
 
-      <div className="flex flex-col sm:flex-row items-center gap-4 mb-16">
-        <Link href="/dashboard">
-          <Button size="lg" className="bg-[#34D399] text-[#030303] hover:bg-[#34D399]/90 font-medium px-8 py-3 rounded-full text-base transition-all shadow-lg shadow-[#34D399]/20 hover:scale-[1.02]">
-            Log in
-          </Button>
-        </Link>
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12 sm:mb-16">
+        {!user ? (
+          <LoginModal
+            text="Log in"
+            btnClassName="bg-[#34D399] text-[#030303] hover:bg-[#34D399]/90 font-medium px-8 py-3 rounded-full text-base transition-all shadow-lg shadow-[#34D399]/20 hover:scale-[1.02]"
+          />
+        ) : (
+          <Link href="/dashboard">
+            <Button size="lg" className="bg-[#34D399] text-[#030303] hover:bg-[#34D399]/90 font-medium px-8 py-3 rounded-full text-base transition-all shadow-lg shadow-[#34D399]/20 hover:scale-[1.02]">
+              Dashboard
+            </Button>
+          </Link>
+        )}
       </div>
+      
 
       {/* Visual illustration frame */}
       <div className="relative w-full max-w-5xl rounded-2xl border border-[#27272A] bg-[#18181B]/80 backdrop-blur-xl p-4 sm:p-6 shadow-2xl shadow-black/80">

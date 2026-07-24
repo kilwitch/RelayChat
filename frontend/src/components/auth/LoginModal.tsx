@@ -12,7 +12,13 @@ import { Button } from '../ui/button'
 import Image from 'next/image'
 import { signIn } from "next-auth/react"
 
-export default function LoginModal() {
+export default function LoginModal({
+  text = "Get Started",
+  btnClassName = "bg-[#34D399] text-[#030303] hover:bg-[#34D399]/90 font-medium px-4 py-2 rounded-lg transition-all shadow-sm shadow-[#34D399]/20",
+}: {
+  text?: string;
+  btnClassName?: string;
+}) {
 
   const handleLogin = () => {
     signIn("google", {
@@ -24,8 +30,8 @@ export default function LoginModal() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="bg-[#34D399] text-[#030303] hover:bg-[#34D399]/90 font-medium px-4 py-2 rounded-lg transition-all shadow-sm shadow-[#34D399]/20">
-          Get Started
+        <Button className={btnClassName}>
+          {text}
         </Button>
       </DialogTrigger>
       <DialogContent className="bg-[#18181B] border border-[#27272A] text-white sm:max-w-md rounded-xl p-6">
