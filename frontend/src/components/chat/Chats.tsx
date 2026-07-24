@@ -41,11 +41,11 @@ export default function Chats({
     
     if (!chatUser?.name) return;
     
-    if (connectedRef.current) return;
-
     const socket = getSocket();
 
-    
+    if (socket.connected) {
+      socket.disconnect();
+    }
 
     socket.on("message", (data: MessageType) => {
       setMessages((prev) => [...prev, data]);
