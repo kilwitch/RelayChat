@@ -66,7 +66,8 @@ export default function ChatBase({
       <ChatSidebar users={users} onlineUsers={onlineUsers} />
       <div className="w-full md:flex-1 bg-[#030303] flex flex-col h-screen overflow-hidden">
         {open ? (
-          <ChatUserDialog open={open} setOpen={setOpen} group={group} />
+          <ChatUserDialog open={open} setOpen={setOpen} group={group}
+          setChatUser={setChatUser} />
         ) : (
           <ChatNav chatGroup={group} users={users} user={chatUser} onlineUsers={onlineUsers} />
         )}

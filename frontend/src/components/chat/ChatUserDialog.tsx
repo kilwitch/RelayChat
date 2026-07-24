@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import axios from "axios";
 import { CHAT_GROUP_USERS_URL } from "@/lib/apiEndPoints";
 import { toast } from "sonner";
@@ -18,12 +18,16 @@ export default function ChatUserDialog({
   open,
   setOpen,
   group,
+  setChatUser,
 }: {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
   group: GroupChatType;
+  setChatUser:Dispatch<SetStateAction<GroupChatUserType | undefined>> ;
 }) {
   const params = useParams();
+  const router= useRouter();
+
   const [state, setState] = useState({
     name: "",
     passcode: "",
@@ -34,6 +38,7 @@ export default function ChatUserDialog({
     if (data) {
       const jsonData = JSON.parse(data);
       if (jsonData?.name && jsonData?.group_id) {
+        setChatUser(jsonData);
         setOpen(false);
       }
     }
@@ -41,28 +46,41 @@ export default function ChatUserDialog({
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+
+    if (group.passcode !== state.passcode) {
+      toast.error("Please enter correct passcode!");
+      return;
+    }
+
+    let userObj: GroupChatUserType | null = null;
     const localData = localStorage.getItem(params["id"] as string);
-    if (!localData) {
+
+    if (localData) {
+      userObj = JSON.parse(localData);
+    } else {
       try {
         const { data } = await axios.post(CHAT_GROUP_USERS_URL, {
           name: state.name,
           group_id: params["id"] as string,
         });
-        localStorage.setItem(
-          params["id"] as string,
-          JSON.stringify(data?.data)
-        );
+        userObj = data?.data;
+        if (userObj) {
+          localStorage.setItem(
+            params["id"] as string,
+            JSON.stringify(userObj)
+          );
+        }
       } catch (error) {
         toast.error("Something went wrong. Please try again!");
-        return; 
+        return;
       }
     }
-   
-    if (group.passcode !== state.passcode) {
-      toast.error("Please enter correct passcode!");
-    } else {
-      setOpen(false);
+
+    if (userObj) {
+      setChatUser(userObj);
     }
+    setOpen(false);
+    router.refresh();
   };
 
   return (
