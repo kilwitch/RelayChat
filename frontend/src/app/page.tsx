@@ -8,17 +8,17 @@ import { authOptions, CustomSession } from "./api/auth/[...nextauth]/options";
 
 
 export default async function Home() {
-  const session:CustomSession |null = await getServerSession(authOptions)
-  
-  
+  const session: CustomSession | null = await getServerSession(authOptions)
+
+
 
 
   return (
-     <div className="min-h-screen flex flex-col ">
+    <div className="min-h-screen flex flex-col ">
       {/* Header */}
-      <Navbar user= {session?.user ?? null} />
+      <Navbar user={session?.user ?? null} />
       {/* Hero Section */}
-      <HeroSection />
+      <HeroSection user={session?.user ?? null} />
 
       {/* Features Section */}
       <FeatureSection />

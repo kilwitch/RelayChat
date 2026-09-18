@@ -8,6 +8,9 @@ class ChatsController{
             const chats=await prisma.chats.findMany({
                 where:{
                     group_id:groupId,
+                },
+                orderBy: {
+                    created_at: "asc"
                 }
             })
 

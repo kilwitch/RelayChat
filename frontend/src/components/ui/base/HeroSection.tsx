@@ -4,7 +4,7 @@ import Link from "next/link";
 import { CustomUser } from "@/app/api/auth/[...nextauth]/options";
 import LoginModal from "@/components/auth/LoginModal";
 
-export default function HeroSection({user}:{user:CustomUser |null}) {
+export default function HeroSection({ user }: { user: CustomUser | null }) {
   return (
     <section className="relative flex-1 flex flex-col items-center justify-center text-center px-6 py-20 md:py-28 overflow-hidden bg-[#030303]">
       {/* Ambient background glow */}
@@ -42,7 +42,7 @@ export default function HeroSection({user}:{user:CustomUser |null}) {
           </Link>
         )}
       </div>
-      
+
 
       {/* Visual illustration frame */}
       <div className="relative w-full max-w-5xl rounded-2xl border border-[#27272A] bg-[#18181B]/80 backdrop-blur-xl p-4 sm:p-6 shadow-2xl shadow-black/80">
